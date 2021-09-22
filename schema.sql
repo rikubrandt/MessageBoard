@@ -1,29 +1,32 @@
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS room CASCADE; 
+DROP TABLE IF EXISTS posts CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR NOT NULL UNIQUE,
     password VARCHAR NOT NULL,
     role integer NOT NULL DEFAULT '1'
-)
+);
 
 CREATE TABLE room (
     id integer PRIMARY KEY,
     name TEXT,
-    moderator integer REFERENCES users(user_id),
+    moderator integer REFERENCES users(id)
 
-)
+);
 
-CREATE TABLE post (
+CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    post_owner integer REFERENCES users(id)
+    post_owner integer REFERENCES users(id),
     title TEXT,
-    visible 
     created_at TIMESTAMP 
-)
-
+);
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
-    post_id integer REFERENCES posts(post_id),
+    post_id integer REFERENCES posts(id),
     user_id integer REFERENCES users(id), 
     content TEXT,
     sent_at TIMESTAMP
-)
+);

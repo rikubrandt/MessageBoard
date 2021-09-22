@@ -15,10 +15,10 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    sql = "SELECT * FROM users;"
+    sql = "SELECT * FROM room;"
     result = db.session.execute(sql)
-    name = result.fetchone()[1]
-    return render_template("index.html", test=name)
+    rooms = result.fetchall()
+    return render_template("index.html", rooms=rooms)
 
 @app.route("/login")
 def loginPage():

@@ -5,9 +5,13 @@
 {% endblock%}
 
 {% block content %}
+<h1 class="display-4">Boards</h1>
 
-
-<h1>This is content block {{session.username}}</h1>
+<ul class="list-group">
+{% for room in rooms%}
+    <li class="list-group-item"><h4><a href="/rooms /{{room.name}}">{{room.name}}</a></h4> Last message: </li>
+{% endfor %}
+</ul>
 {% endblock %}
 
 {% block footer%}

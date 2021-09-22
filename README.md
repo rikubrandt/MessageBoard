@@ -12,3 +12,7 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 * Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 * Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
+
+
+# #TODO
+* Flash messages käyttäjälle

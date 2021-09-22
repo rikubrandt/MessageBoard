@@ -1,1 +1,15 @@
-<h1>Huomenta suomi</h1>
+{% extends "base.html" %}
+
+{% block header %}
+    {{super()}}
+{% endblock%}
+
+{% block content %}
+
+
+<h1>This is content block {{test}}</h1>
+{% endblock %}
+
+{% block footer%}
+    {{super()}}
+{% endblock %}

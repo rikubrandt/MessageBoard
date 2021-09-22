@@ -1,12 +1,15 @@
+from re import I
 from flask import Flask
 from flask import redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
+app.secret_key = getenv("SECRET_KEY")
 
 db = SQLAlchemy(app)
 
@@ -20,6 +23,42 @@ def index():
 @app.route("/login")
 def loginPage():
     return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    session["username"] = username
+    return redirect("/")
+
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")
+
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
+
+@app.route("/registerUser", methods=["POST"])
+def register():
+    hash_password = generate_password_hash(request.form["password"])
+    username = request.form["username"]
+    sql = "SELECT id FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username})
+    user = result.fetchone()
+    if user:
+        print("Username already exists.")
+        pass
+    else:
+        sql = "INSERT INTO users (username, password) VALUES (:username, :password)"
+        db.session.execute(sql, {"username": username, "password": hash_password})
+        print("YEABOAH")
+    db.session.commit()
+    return redirect("/")
+
 
 @app.route("/boards")
 def boards():

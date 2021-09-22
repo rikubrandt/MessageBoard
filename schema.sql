@@ -16,7 +16,8 @@ CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     post_owner integer REFERENCES users(id)
     title TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    visible 
+    created_at TIMESTAMP 
 )
 
 CREATE TABLE messages (
@@ -24,5 +25,5 @@ CREATE TABLE messages (
     post_id integer REFERENCES posts(post_id),
     user_id integer REFERENCES users(id), 
     content TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    sent_at TIMESTAMP
 )

@@ -24,14 +24,21 @@ def index():
 def loginPage():
     return render_template("login.html")
 
-@app.route("/login", methods=["POST"])
+@app.route("/loginUser", methods=["POST"])
 def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    session["username"] = username
-    return redirect("/")
-
+    sql = "SELECT id, password FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": username})
+    user = result.fetchone()
+    if not user:
+        print("Nono user")
+    else:
+        if check_password_hash(user.password, password):
+            session["username"] = username
+            return redirect("/")
+    return "No logger"
 
 @app.route("/logout")
 def logout():
@@ -55,7 +62,6 @@ def register():
     else:
         sql = "INSERT INTO users (username, password) VALUES (:username, :password)"
         db.session.execute(sql, {"username": username, "password": hash_password})
-        print("YEABOAH")
     db.session.commit()
     return redirect("/")
 

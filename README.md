@@ -1,5 +1,7 @@
 # Keskutelusovellus
 
+Rekisteröinti onnistuu tällä hetkellä sivulta /register
+
 Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovelluksella.
 
 ## Eli
@@ -14,5 +16,10 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
 
 
-# #TODO
+# TODO
 * Flash messages käyttäjälle
+* Käyttäjä voi lähettää viestejä
+* Käyttäjä voi luoda postauksia.
+* Moderaattorit voivat poistaa viestejä
+* Adminit voivat luoda uusia boardeja
+* 

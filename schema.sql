@@ -10,7 +10,7 @@ CREATE TABLE users (
     role integer NOT NULL DEFAULT '1'
 );
 
-CREATE TABLE room (
+CREATE TABLE boards (
     id integer PRIMARY KEY,
     name TEXT,
     moderator integer REFERENCES users(id)
@@ -21,7 +21,8 @@ CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
     post_owner integer REFERENCES users(id),
     title TEXT,
-    created_at TIMESTAMP 
+    created_at TIMESTAMP,
+    board integer REFERENCES boards(id)
 );
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,

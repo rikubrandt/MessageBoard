@@ -8,8 +8,8 @@
 <h1 class="display-4">Boards</h1>
 
 <ul class="list-group">
-{% for room in rooms%}
-    <li class="list-group-item"><h4><a href="/rooms /{{room.name}}">{{room.name}}</a></h4> Last message: </li>
+{% for board in boards%}
+<a class="btn btn-primary" href="/boards/{{board.name}}"><li class="list-group-item btn btn-primary"><h4>{{board.name}}</h4> Last message: TODO</li></a>
 {% endfor %}
 </ul>
 {% endblock %}

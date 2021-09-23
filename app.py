@@ -15,10 +15,10 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    sql = "SELECT * FROM room;"
+    sql = "SELECT * FROM boards;"
     result = db.session.execute(sql)
-    rooms = result.fetchall()
-    return render_template("index.html", rooms=rooms)
+    boards = result.fetchall()
+    return render_template("index.html", boards=boards)
 
 @app.route("/login")
 def loginPage():
@@ -66,8 +66,9 @@ def register():
     return redirect("/")
 
 
-@app.route("/boards")
-def boards():
-    sql = "SELECT * FROM boards;"
-    result = db.session.execute(sql)
-
+@app.route("/boards/<name>")
+def boards(name):
+    sql = "SELECT * FROM posts WHERE board=(SELECT id FROM boards WHERE name=:name);"
+    result = db.session.execute(sql, {"name": name})
+    posts = result.fetchall()
+    return render_template("/board.html", name=name, posts=posts)

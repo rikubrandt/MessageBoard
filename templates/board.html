@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block header %}
+    {{super()}}
+{% endblock%}
+
+{% block content %}
+<h1 class="display-4">{{name}}</h1>
+
+<ul class="list-group">
+{% for post in posts%}
+<a class="btn btn-primary" href="#"><li class="list-group-item btn btn-primary">
+    <h4>{{post.title}}</h4> Last message: TODO</li>
+</a>
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block footer%}
+    {{super()}}
+{% endblock %}

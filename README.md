@@ -1,5 +1,9 @@
 # Keskutelusovellus
 
+URL
+> https://messageboard-tsoha.herokuapp.com/
+
+
 Rekisteröinti onnistuu tällä hetkellä sivulta /register
 
 Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovelluksella.

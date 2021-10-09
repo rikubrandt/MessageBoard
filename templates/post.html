@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block header %}
+    {{super()}}
+{% endblock%}
+
+{% block content %}
+<h1 class="display-4">{{title}}</h1>
+
+<ul class="list-group">
+{% for message in messages%}
+<a class="btn btn-secondary" href="#"><li class="list-group-item btn btn-secondary">
+    <h4>{{message.user_id}}</h4>{{message.content}}</li>
+</a>
+{% endfor %}
+</ul>
+<form action="/sendMessage" method="POST">
+    <div class="form-group">
+        <label for="textarea">Type your message: </label>
+        <textarea class="form-control" id="textarea" name="message" rows="3"></textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary">Send message</button>
+    </div>
+    <input type="hidden" name="id" value="{{id}}">
+</form>
+{% endblock %}
+
+{% block footer%}
+    {{super()}}
+{% endblock %}

@@ -37,12 +37,13 @@ def login():
     else:
         if check_password_hash(user.password, password):
             session["username"] = username
+            session["user_id"] = user.id
             return redirect("/")
     return "No logger"
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    del session["user_id"]
     return redirect("/")
 
 @app.route("/register")
@@ -60,7 +61,7 @@ def register():
         print("Username already exists.")
         pass
     else:
-        sql = "INSERT INTO users (username, password) VALUES (:username, :password)"
+        sql = "INSERT INTO users (username, password, role_id) VALUES (:username, :password, 1)"
         db.session.execute(sql, {"username": username, "password": hash_password})
     db.session.commit()
     return redirect("/")
@@ -72,3 +73,21 @@ def boards(name):
     result = db.session.execute(sql, {"name": name})
     posts = result.fetchall()
     return render_template("/board.html", name=name, posts=posts)
+
+@app.route("/post/<id>")
+def posts(id):
+    sql = "SELECT * FROM messages WHERE post_id=:id;"
+    result = db.session.execute(sql, {"id": id})
+    messages = result.fetchall()
+    return render_template("post.html", messages=messages, id=id)
+
+@app.route("/sendMessage", methods=["POST"])
+def send_message():
+    message = request.form["message"]
+    id = request.form["id"]
+    user_id = session["user_id"]
+    sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
+    db.session.execute(sql, {"id": id, "user": user_id, "message": message})
+    db.session.commit()
+    print(message, id, user_id)
+    return "Yes"

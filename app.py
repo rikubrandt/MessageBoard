@@ -72,14 +72,17 @@ def boards(name):
     sql = "SELECT * FROM posts WHERE board=(SELECT id FROM boards WHERE name=:name);"
     result = db.session.execute(sql, {"name": name})
     posts = result.fetchall()
-    return render_template("/board.html", name=name, posts=posts)
+    return render_template("/board.html", name=name, posts=posts, id=posts[0].board)
 
 @app.route("/post/<id>")
 def posts(id):
     sql = "SELECT * FROM messages WHERE post_id=:id;"
     result = db.session.execute(sql, {"id": id})
     messages = result.fetchall()
-    return render_template("post.html", messages=messages, id=id)
+    sql = "SELECT title FROM posts WHERE id=:id"
+    result = db.session.execute(sql, {"id": id})
+    title = result.fetchone()[0]
+    return render_template("post.html", messages=messages, id=id, title=title)
 
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
@@ -89,5 +92,23 @@ def send_message():
     sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
     db.session.execute(sql, {"id": id, "user": user_id, "message": message})
     db.session.commit()
-    print(message, id, user_id)
-    return "Yes"
+    return redirect("/post/" + id)
+
+
+
+@app.route("/addPost", methods=["POST"])
+def add_post():
+    title = request.form["title"]
+    message = request.form["message"]
+    board_id = request.form["id"]
+    print(board_id)
+    user_id = session["user_id"]
+    sql = "INSERT INTO posts (post_owner, title, created_at, board) VALUES (:user_id, :title, NOW(), :board) RETURNING id;"
+    result = db.session.execute(sql, {"user_id": user_id, "title": title, "board": board_id})
+    #db.session.commit()
+    post_id = result.fetchone().id
+    sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
+    db.session.execute(sql, {"id": post_id, "user": user_id, "message": message})
+    db.session.commit()
+
+    return redirect("/")

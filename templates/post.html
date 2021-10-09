@@ -9,9 +9,9 @@
 
 <ul class="list-group">
 {% for message in messages%}
-<a class="btn btn-secondary" href="#"><li class="list-group-item btn btn-secondary">
-    <h4>{{message.user_id}}</h4>{{message.content}}</li>
-</a>
+<li class="list-group-item">
+    <h4>{{message.user_id}}</h4>{{message.content}}
+</li>
 {% endfor %}
 </ul>
 {% if session.user_id %}

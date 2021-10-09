@@ -14,6 +14,7 @@
 </a>
 {% endfor %}
 </ul>
+{% if session.user_id %}
 <form action="/sendMessage" method="POST">
     <div class="form-group">
         <label for="textarea">Type your message: </label>
@@ -24,6 +25,7 @@
     </div>
     <input type="hidden" name="id" value="{{id}}">
 </form>
+{% endif %}
 {% endblock %}
 
 {% block footer%}

@@ -129,7 +129,7 @@ def delete_message():
 @app.route("/result")
 def result():
     query = request.args["query"]
-    sql = "SELECT m.id, m.post_id, m.user_id, m.content, m.created_at FROM messages as m WHERE content LIKE :query AND visible = true"
+    sql = "SELECT m.id, m.post_id, m.user_id, m.content, m.created_at FROM messages as m WHERE content ILIKE :query AND visible = true"
     result = db.session.execute(sql, {"query":"%"+query+"%"})
     messages = result.fetchall()
     print(messages)

@@ -117,7 +117,7 @@ def add_post():
 
 @app.route("/deleteMessage", methods=["POST"])
 def delete_message():
-    if session.username != request.form["username"]:
+    if session["username"] != request.form["username"]:
         return "Forbidden - 403"
     else:
         id = request.form["id"]

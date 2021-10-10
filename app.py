@@ -58,8 +58,7 @@ def register():
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if user:
-        print("Username already exists.")
-        pass
+        return "Username already exists."
     else:
         sql = "INSERT INTO users (username, password, role_id) VALUES (:username, :password, 1)"
         db.session.execute(sql, {"username": username, "password": hash_password})
@@ -77,7 +76,7 @@ def boards(name):
 @app.route("/post/<id>")
 def posts(id):
     sql = """SELECT m.id, m.post_id, m.user_id, m.content, m.created_at, m.visible, u.username 
-    FROM messages as m INNER JOIN users AS u ON m.user_id=u.id AND m.post_id=:id ORDER BY m.created_at;"""
+    FROM messages as m INNER JOIN users AS u ON m.user_id=u.id AND m.post_id=:id AND m.visible=true ORDER BY m.created_at;"""
     result = db.session.execute(sql, {"id": id})
     messages = result.fetchall()
     sql = "SELECT title FROM posts WHERE id=:id"
@@ -112,4 +111,14 @@ def add_post():
     db.session.execute(sql, {"id": post_id, "user": user_id, "message": message})
     db.session.commit()
 
+    return redirect("/post/" +str(post_id))
+
+@app.route("/deleteMessage", methods=["POST"])
+def delete_message():
+    id = request.form["id"]
+    print("ID ON TÄMÄ: " + id)
+    sql = "UPDATE messages SET visible = FALSE WHERE id=:id RETURNING post_id"
+    result = db.session.execute(sql, {"id": id})
+    post_id = result.fetchone().post_id
+    db.session.commit()
     return redirect("/post/" +str(post_id))

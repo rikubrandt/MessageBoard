@@ -15,6 +15,7 @@
     <form action="/deleteMessage" method="POST">
     <button class="btn btn-danger">Del</button>
     <input type="hidden" name="id" value="{{message.id}}">
+    <input type="hidden" name="username" value="{{session.username}}">
     </form>
     {% endif %}
 </li>

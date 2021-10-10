@@ -92,7 +92,8 @@ def send_message():
     sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
     db.session.execute(sql, {"id": id, "user": user_id, "message": message})
     db.session.commit()
-    return redirect("/post/" + id)
+    return redirect(request.referrer)
+
 
 
 
@@ -111,14 +112,16 @@ def add_post():
     db.session.execute(sql, {"id": post_id, "user": user_id, "message": message})
     db.session.commit()
 
-    return redirect("/post/" +str(post_id))
+    return redirect(request.referrer)
+
 
 @app.route("/deleteMessage", methods=["POST"])
 def delete_message():
-    id = request.form["id"]
-    print("ID ON TÄMÄ: " + id)
-    sql = "UPDATE messages SET visible = FALSE WHERE id=:id RETURNING post_id"
-    result = db.session.execute(sql, {"id": id})
-    post_id = result.fetchone().post_id
-    db.session.commit()
-    return redirect("/post/" +str(post_id))
+    if session.username != request.form["username"]:
+        return "Forbidden - 403"
+    else:
+        id = request.form["id"]
+        sql = "UPDATE messages SET visible = FALSE WHERE id=:id;"
+        db.session.execute(sql, {"id": id})
+        db.session.commit()
+        return redirect(request.referrer)

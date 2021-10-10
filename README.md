@@ -27,3 +27,4 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Moderaattorit voivat poistaa viestejä
 * Adminit voivat luoda uusia boardeja
 * Sovelluksen rakenne uusiksi.
+* Korjaa kaikki tähtimerkki queryt.

@@ -76,7 +76,8 @@ def boards(name):
 
 @app.route("/post/<id>")
 def posts(id):
-    sql = "SELECT * FROM messages WHERE post_id=:id;"
+    sql = """SELECT m.id, m.post_id, m.user_id, m.content, m.created_at, m.visible, u.username 
+    FROM messages as m INNER JOIN users AS u ON m.user_id=u.id AND m.post_id=:id ORDER BY m.created_at;"""
     result = db.session.execute(sql, {"id": id})
     messages = result.fetchall()
     sql = "SELECT title FROM posts WHERE id=:id"
@@ -105,10 +106,10 @@ def add_post():
     user_id = session["user_id"]
     sql = "INSERT INTO posts (post_owner, title, created_at, board) VALUES (:user_id, :title, NOW(), :board) RETURNING id;"
     result = db.session.execute(sql, {"user_id": user_id, "title": title, "board": board_id})
-    #db.session.commit()
+    
     post_id = result.fetchone().id
     sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
     db.session.execute(sql, {"id": post_id, "user": user_id, "message": message})
     db.session.commit()
 
-    return redirect("/")
+    return redirect("/post/" +str(post_id))

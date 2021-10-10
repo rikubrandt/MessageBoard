@@ -125,3 +125,12 @@ def delete_message():
         db.session.execute(sql, {"id": id})
         db.session.commit()
         return redirect(request.referrer)
+
+@app.route("/result")
+def result():
+    query = request.args["query"]
+    sql = "SELECT m.id, m.post_id, m.user_id, m.content, m.created_at FROM messages as m WHERE content LIKE :query AND visible = true"
+    result = db.session.execute(sql, {"query":"%"+query+"%"})
+    messages = result.fetchall()
+    print(messages)
+    return render_template("result.html", messages=messages)

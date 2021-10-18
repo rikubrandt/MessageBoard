@@ -21,9 +21,9 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 
 
 # TODO
-* Flash messages käyttäjälle
-* Käyttäjä voi lähettää viestejä
-* Käyttäjä voi luoda postauksia.
+* Flash messages käyttäjälle [x]
+* Käyttäjä voi lähettää viestejä [x]
+* Käyttäjä voi luoda postauksia. [x]
 * Moderaattorit voivat poistaa viestejä
 * Adminit voivat luoda uusia boardeja
 * Sovelluksen rakenne uusiksi.

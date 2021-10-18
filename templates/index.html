@@ -12,6 +12,18 @@
 <a class="btn btn-primary" href="/boards/{{board.name}}"><li class="list-group-item btn btn-primary"><h4>{{board.name}}</h4> Last message: TODO</li></a>
 {% endfor %}
 </ul>
+{% if session.role == 3 %}
+<form action="/createBoard" method="POST">
+    <h4>Create new board</h4>
+    <div class="form-group">
+        <label for="textarea">Type board name: </label>
+        <textarea class="form-control" id="textarea" name="name" rows="1"></textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary">Create</button>
+    </div>
+</form>
+{% endif %}
 {% endblock %}
 
 {% block footer%}

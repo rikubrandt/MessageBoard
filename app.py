@@ -30,7 +30,7 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT id, password FROM users WHERE username=:username"
+    sql = "SELECT id, password, role_id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
     user = result.fetchone()
     if not user:
@@ -39,6 +39,7 @@ def login():
         if check_password_hash(user.password, password):
             session["username"] = username
             session["user_id"] = user.id
+            session["role"] = user.role_id
             flash("Logged in as: " + username, "success")
             return redirect("/")
         flash("Username and password don't match.", "warning")
@@ -48,6 +49,7 @@ def login():
 def logout():
     del session["user_id"]
     del session["username"]
+    del session["role"]
     flash("You have been logged out.", "warning")
     return redirect("/")
 
@@ -149,3 +151,15 @@ def result():
     result = db.session.execute(sql, {"query":"%"+query+"%"})
     messages = result.fetchall()
     return render_template("result.html", messages=messages)
+
+@app.route("/createBoard", methods=["POST"])
+def create_board():
+    name = request.form["name"]
+    if not name:
+        flash("Board name can't be empty.", "warning")
+        return(request.referrer)
+    
+    sql = "INSERT INTO boards (name) VALUES (:name)"
+    db.session.execute(sql, {"name": name})
+    flash("Board created succesfully", "success")
+    return(request.referrer)

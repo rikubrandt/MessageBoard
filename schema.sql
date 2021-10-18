@@ -17,7 +17,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE boards (
-    id integer PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name TEXT,
     moderator integer REFERENCES users(id),
     visible boolean default true

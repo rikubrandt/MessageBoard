@@ -58,16 +58,26 @@ def register_page():
 def register():
     hash_password = generate_password_hash(request.form["password"])
     username = request.form["username"]
+
+    if not username:
+        flash("Username can't be empty.")
+        return redirect(request.referrer)
+    elif not request.form["password"]:
+        flash("Password can't be empty.")
+        return redirect(request.referrer)
+
     sql = "SELECT id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if user:
-        return "Username already exists."
+        flash("Username already exists.")
     else:
         sql = "INSERT INTO users (username, password, role_id) VALUES (:username, :password, 1)"
         db.session.execute(sql, {"username": username, "password": hash_password})
-    db.session.commit()
-    return redirect("/")
+        flash("Welcome " + username)
+        db.session.commit()
+        return redirect("/")
+    return redirect(request.referrer)
 
 
 @app.route("/boards/<name>")

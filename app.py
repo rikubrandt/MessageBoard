@@ -1,5 +1,6 @@
 from flask import Flask, flash
 from flask import redirect, render_template, request, session
+from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -161,5 +162,6 @@ def create_board():
     
     sql = "INSERT INTO boards (name) VALUES (:name)"
     db.session.execute(sql, {"name": name})
+    db.session.commit()
     flash("Board created succesfully", "success")
-    return(request.referrer)
+    return redirect("/")

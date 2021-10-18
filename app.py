@@ -86,11 +86,12 @@ def register():
 
 @app.route("/boards/<name>")
 def boards(name):
-    sql = "SELECT * FROM posts WHERE board=(SELECT id FROM boards WHERE name=:name);"
+    sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name"
     result = db.session.execute(sql, {"name": name})
     posts = result.fetchall()
-
-    return render_template("/board.html", name=name, posts=posts, id=posts[0].board)
+    result =db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
+    id = result.fetchone()[0]
+    return render_template("/board.html", name=name, posts=posts, id=id)
 
 @app.route("/post/<id>")
 def posts(id):

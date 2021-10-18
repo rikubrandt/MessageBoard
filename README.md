@@ -25,7 +25,8 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Käyttäjä voi lähettää viestejä [x]
 * Käyttäjä voi luoda postauksia. [x]
 * Moderaattorit voivat poistaa viestejä
-* Adminit voivat luoda uusia boardeja
+* Adminit voivat luoda uusia boardeja [x]
 * Sovelluksen rakenne uusiksi.
 * Korjaa kaikki tähtimerkki queryt.
 * Viestien muokkaus.
+* CSRF haavoittuvuudet.

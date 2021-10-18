@@ -86,6 +86,7 @@ def boards(name):
     sql = "SELECT * FROM posts WHERE board=(SELECT id FROM boards WHERE name=:name);"
     result = db.session.execute(sql, {"name": name})
     posts = result.fetchall()
+
     return render_template("/board.html", name=name, posts=posts, id=posts[0].board)
 
 @app.route("/post/<id>")
@@ -147,5 +148,4 @@ def result():
     sql = "SELECT m.id, m.post_id, m.user_id, m.content, m.created_at FROM messages as m WHERE content ILIKE :query AND visible = true"
     result = db.session.execute(sql, {"query":"%"+query+"%"})
     messages = result.fetchall()
-    print(messages)
     return render_template("result.html", messages=messages)

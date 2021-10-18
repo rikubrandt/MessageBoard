@@ -1,5 +1,4 @@
-from re import I
-from flask import Flask
+from flask import Flask, flash
 from flask import redirect, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
@@ -9,6 +8,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 app.secret_key = getenv("SECRET_KEY")
 
 db = SQLAlchemy(app)
@@ -33,17 +34,20 @@ def login():
     result = db.session.execute(sql, {"username": username})
     user = result.fetchone()
     if not user:
-        print("Nono user")
+        flash("Username not found.")
     else:
         if check_password_hash(user.password, password):
             session["username"] = username
             session["user_id"] = user.id
+            flash("Logged in as " + username)
             return redirect("/")
-    return "No logger"
+        flash("Username and password don't match.")
+    return redirect(request.referrer)
 
 @app.route("/logout")
 def logout():
     del session["user_id"]
+    del session["username"]
     return redirect("/")
 
 @app.route("/register")

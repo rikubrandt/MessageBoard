@@ -10,10 +10,10 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 
 ## Eli
 
-* Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
-* Käyttäjä näkee sovelluksen etusivulla listan alueista sekä jokaisen alueen ketjujen ja viestien määrän ja viimeksi lähetetyn viestin ajankohdan.
-* Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
-* Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
+* Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen. CHECK
+* Käyttäjä näkee sovelluksen etusivulla listan alueista sekä jokaisen alueen ketjujen ja viestien määrän ja viimeksi lähetetyn viestin ajankohdan. 
+* Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön. CHECK
+* Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun. CHECK
 * Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Käyttäjä voi myös poistaa ketjun tai viestin.
 * Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 * Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
@@ -28,3 +28,4 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Adminit voivat luoda uusia boardeja
 * Sovelluksen rakenne uusiksi.
 * Korjaa kaikki tähtimerkki queryt.
+* Viestien muokkaus.

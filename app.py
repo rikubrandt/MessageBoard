@@ -27,8 +27,8 @@ def loginPage():
 
 @app.route("/loginUser", methods=["POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.form["username"].strip()
+    password = request.form["password"].strip()
 
     sql = "SELECT id, password, role_id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
@@ -59,8 +59,8 @@ def register_page():
 
 @app.route("/registerUser", methods=["POST"])
 def register():
-    hash_password = generate_password_hash(request.form["password"])
-    username = request.form["username"]
+    hash_password = generate_password_hash(request.form["password"].strip())
+    username = request.form["username"].strip()
 
     if not username:
         flash("Username can't be empty.")

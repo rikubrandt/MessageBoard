@@ -39,7 +39,7 @@ def login():
         if check_password_hash(user.password, password):
             session["username"] = username
             session["user_id"] = user.id
-            flash("Logged in as " + username)
+            flash("Logged in as: " + username, "success")
             return redirect("/")
         flash("Username and password don't match.", "warning")
     return redirect(request.referrer)
@@ -48,6 +48,7 @@ def login():
 def logout():
     del session["user_id"]
     del session["username"]
+    flash("You have been logged out.", "warning")
     return redirect("/")
 
 @app.route("/register")

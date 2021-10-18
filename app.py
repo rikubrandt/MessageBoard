@@ -34,14 +34,14 @@ def login():
     result = db.session.execute(sql, {"username": username})
     user = result.fetchone()
     if not user:
-        flash("Username not found.")
+        flash("Username not found.", "warning")
     else:
         if check_password_hash(user.password, password):
             session["username"] = username
             session["user_id"] = user.id
             flash("Logged in as " + username)
             return redirect("/")
-        flash("Username and password don't match.")
+        flash("Username and password don't match.", "warning")
     return redirect(request.referrer)
 
 @app.route("/logout")
@@ -74,9 +74,9 @@ def register():
     else:
         sql = "INSERT INTO users (username, password, role_id) VALUES (:username, :password, 1)"
         db.session.execute(sql, {"username": username, "password": hash_password})
-        flash("Welcome " + username)
+        flash("Registered succesfully, login using your credentials", "success")
         db.session.commit()
-        return redirect("/")
+        return redirect("/login")
     return redirect(request.referrer)
 
 

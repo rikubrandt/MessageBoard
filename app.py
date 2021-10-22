@@ -163,9 +163,9 @@ def delete_message():
         id = request.form["id"]
 
         # checks if the given message is the first of the post.
-        sql = """SELECT a.id FROM messages as a WHERE created_at =
-        (SELECT MIN(m.created_at) FROM messages as m INNER JOIN posts as p ON 
-        p.id=m.post_id AND m.visible = TRUE) AND id=:id"""
+        sql = "SELECT m.id FROM messages as m INNER JOIN posts as p ON p.created_at=m.created_at AND m.post_id=p.id AND m.id=:id"
+
+
         result = db.session.execute(sql, {"id": id})
         first = result.fetchone()
         if first:
@@ -176,11 +176,13 @@ def delete_message():
             sql = "UPDATE messages SET visible = FALSE WHERE post_id=:id"
             db.session.execute(sql, {"id": id})
             db.session.commit()
+            flash("Post was deleted.", "success")
             return redirect("/")
         else:
             sql = "UPDATE messages SET visible = FALSE WHERE id=:id;"
             db.session.execute(sql, {"id": id})
             db.session.commit()
+            flash("Message deleted.", "success")
             return redirect(request.referrer)
 
 @app.route("/result")

@@ -9,7 +9,7 @@
 
 <ul class="list-group">
 {% for message in messages%}
-<a href="/post/{{message.post_id}}">
+<a style="text-decoration : none; color : #000000;" href="/post/{{message.post_id}}">
     <li class="list-group-item">
     <h4>{{message.id}}</h4>{{message.content}}, Time sent: {{message.created_at}}
     </li>

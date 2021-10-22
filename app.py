@@ -86,7 +86,7 @@ def register():
 
 @app.route("/boards/<name>")
 def boards(name):
-    sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name"
+    sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name AND p.visible = TRUE"
     result = db.session.execute(sql, {"name": name})
     posts = result.fetchall()
     result =db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
@@ -180,7 +180,6 @@ def edit_post(id):
 def update_message():
     message = request.form["message"]
     id = request.form["id"]
-    print(message, id)
     sql = "UPDATE messages SET content = :message WHERE id=:id"
     db.session.execute(sql, {"message": message, "id": id})
     db.session.commit()
@@ -189,3 +188,15 @@ def update_message():
     result = db.session.execute(sql, {"id": id})
     post = result.fetchone()
     return redirect("post/" + str(post.id))
+
+@app.route("/deletePost", methods=["POST"])
+def delete_post():
+    id = request.form["id"]
+    sql = "UPDATE posts SET visible = FALSE WHERE id=:id"
+    db.session.execute(sql, {"id": id})
+    db.session.commit()
+
+    sql = "UPDATE messages SET visible = FALSE WHERE post_id=:id"
+    db.session.execute(sql, {"id": id})
+    db.session.commit()
+    return redirect(request.referrer)

@@ -4,7 +4,7 @@ from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import secrets
 
 app = Flask(__name__)
 
@@ -41,6 +41,7 @@ def login():
             session["username"] = username
             session["user_id"] = user.id
             session["role"] = user.role_id
+            session["csrf_token"] = secrets.token_hex(16)
             flash("Logged in as: " + username, "success")
             return redirect("/")
         flash("Username and password don't match.", "warning")
@@ -51,6 +52,7 @@ def logout():
     del session["user_id"]
     del session["username"]
     del session["role"]
+    
     flash("You have been logged out.", "warning")
     return redirect("/")
 
@@ -88,7 +90,9 @@ def register():
 def boards(name):
     sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name AND p.visible = TRUE"
     result = db.session.execute(sql, {"name": name})
-    posts = result.fetchall()
+    posts = None
+    if result:
+        posts = result.fetchall()
     result =db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
     id = result.fetchone()[0]
     return render_template("/board.html", name=name, posts=posts, id=id)
@@ -101,7 +105,7 @@ def posts(id):
     messages = result.fetchall()
     sql = "SELECT title FROM posts WHERE id=:id"
     result = db.session.execute(sql, {"id": id})
-    title = messages[0].post_id
+    title = messages[0].post_id ##FIX THIS
     return render_template("post.html", messages=messages, post_id=id, title=title)
 
 @app.route("/sendMessage", methods=["POST"])
@@ -140,7 +144,9 @@ def delete_message():
     if session["username"] != request.form["username"]:
         return "Forbidden - 403"
     else:
+        first_message = False
         id = request.form["id"]
+
         sql = "UPDATE messages SET visible = FALSE WHERE id=:id;"
         db.session.execute(sql, {"id": id})
         db.session.commit()
@@ -156,7 +162,7 @@ def result():
 
 @app.route("/createBoard", methods=["POST"])
 def create_board():
-    name = request.form["name"]
+    name = request.form["name"].rstrip()
     if not name:
         flash("Board name can't be empty.", "warning")
         return(request.referrer)

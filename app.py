@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    sql = "SELECT * FROM boards;"
+    sql = "SELECT id, name FROM boards WHERE visible = TRUE;"
     result = db.session.execute(sql)
     boards = result.fetchall()
     return render_template("index.html", boards=boards)
@@ -90,11 +90,10 @@ def register():
 def boards(name):
     sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name AND p.visible = TRUE"
     result = db.session.execute(sql, {"name": name})
-    posts = None
-    if result:
-        posts = result.fetchall()
+    posts = result.fetchall()
     result = db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
     id = result.fetchone()[0]
+
     return render_template("/board.html", name=name, posts=posts, id=id)
 
 @app.route("/post/<id>")
@@ -111,7 +110,7 @@ def posts(id):
 
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
-    message = request.form["message"]
+    message = request.form["message"].rstrip()
     if not message:
         flash("Please add your message.", "warning")
         return redirect(request.referrer)
@@ -132,8 +131,8 @@ def send_message():
 
 @app.route("/addPost", methods=["POST"])
 def add_post():
-    title = request.form["title"]
-    message = request.form["message"]
+    title = request.form["title"].rstrip()
+    message = request.form["message"].rstrip()
     board_id = request.form["id"]
     if not title:
         flash("Title is needed.", "warning")
@@ -211,7 +210,6 @@ def edit_post(id):
     sql = "SELECT id, post_id, content FROM messages WHERE id=:id"
     result = db.session.execute(sql, {"id": id})
     message = result.fetchone()
-    print("TÄÄ ON MESSAGE ID:" + str(message.id))
     return render_template("edit.html", message=message)
 
 @app.route("/updateMessage", methods=["POST"])
@@ -238,3 +236,16 @@ def delete_post():
     db.session.execute(sql, {"id": id})
     db.session.commit()
     return redirect(request.referrer)
+
+@app.route("/deleteBoard", methods=["POST"])
+def delete_board():
+    id = request.form["id"]
+    if not id:
+        flash("Something wen't wrong", "danger")
+        return redirect(request.referrer)
+    sql = "UPDATE boards SET visible = FALSE WHERE id=:id"
+    db.session.execute(sql, {"id": id})
+    db.session.commit()
+    flash("Board deleted successfully.", "success")
+    return redirect(request.referrer)
+

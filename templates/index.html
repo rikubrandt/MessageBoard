@@ -9,7 +9,16 @@
 
 <ul class="list-group">
 {% for board in boards%}
-<a class="btn btn-primary" href="/boards/{{board.name}}"><li class="list-group-item btn btn-primary"><h4>{{board.name}}</h4> Last message: TODO</li></a>
+<a class="btn btn-primary" href="/boards/{{board.name}}">
+    <li class="list-group-item btn btn-primary">
+        <h4>{{board.name}}</h4> Last message: TODO
+        {% if session.role == 3%}
+            <form action="/deleteBoard" method="POST">
+                <button class="btn btn-danger">Delete</button>
+                <input type="hidden" name="id" value={{board.id}}>
+            </form>
+        {% endif %}
+    </li></a>
 {% endfor %}
 </ul>
 {% if session.role == 3 %}

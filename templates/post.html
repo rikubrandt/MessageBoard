@@ -11,12 +11,14 @@
 {% for message in messages%}
 <li class="list-group-item">
     <h4>{{message.username}}</h4>{{message.content}}, Time sent: {{message.created_at}} ID: {{message.id}}
+    {% if session.user_id%}
     {%if session.user_id == message.user_id or session.role > 1 %}
     <form action="/deleteMessage" method="POST">
     <button class="btn btn-danger">Del</button>
     <input type="hidden" name="id" value="{{message.id}}">
     <input type="hidden" name="username" value="{{session.username}}">
     </form>
+    {% endif %}
     {% endif %}
 </li>
 {% endfor %}
@@ -30,7 +32,7 @@
     <div>
         <button class="btn btn-primary">Send message</button>
     </div>
-    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id" value="{{post_id}}">
 </form>
 {% endif %}
 {% endblock %}

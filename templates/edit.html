@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block header %}
+    {{super()}}
+{% endblock%}
+
+{% block content %}
+<h1 class="display-4">Edit Message</h1>
+{% if session.user_id %}
+<form action="/updateMessage" method="POST">
+    <div class="form-group">
+        <label for="textarea">Edit your message: </label>
+        <textarea class="form-control" id="textarea" name="message" rows="3">{{message.content}}</textarea>
+    </div>
+    <div>
+        <button class="btn btn-primary">Edit message</button>
+    </div>
+    <input type="hidden" name="id" value="{{message.id}}">
+</form>
+{% endif %}
+{% endblock %}
+
+{% block footer%}
+    {{super()}}
+{% endblock %}

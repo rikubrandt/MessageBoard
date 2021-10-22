@@ -101,8 +101,8 @@ def posts(id):
     messages = result.fetchall()
     sql = "SELECT title FROM posts WHERE id=:id"
     result = db.session.execute(sql, {"id": id})
-    title = result.fetchone()[0]
-    return render_template("post.html", messages=messages, id=id, title=title)
+    title = messages[0].post_id
+    return render_template("post.html", messages=messages, post_id=id, title=title)
 
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
@@ -166,3 +166,26 @@ def create_board():
     db.session.commit()
     flash("Board created succesfully", "success")
     return redirect("/")
+
+@app.route("/edit/<id>")
+def edit_post(id):
+    print("Edit message id: " + id)
+    sql = "SELECT id, post_id, content FROM messages WHERE id=:id"
+    result = db.session.execute(sql, {"id": id})
+    message = result.fetchone()
+    print("TÄÄ ON MESSAGE ID:" + str(message.id))
+    return render_template("edit.html", message=message)
+
+@app.route("/updateMessage", methods=["POST"])
+def update_message():
+    message = request.form["message"]
+    id = request.form["id"]
+    print(message, id)
+    sql = "UPDATE messages SET content = :message WHERE id=:id"
+    db.session.execute(sql, {"message": message, "id": id})
+    db.session.commit()
+
+    sql = "SELECT p.id FROM posts as p INNER JOIN messages as m ON m.post_id=p.id AND m.id=:id"
+    result = db.session.execute(sql, {"id": id})
+    post = result.fetchone()
+    return redirect("post/" + str(post.id))

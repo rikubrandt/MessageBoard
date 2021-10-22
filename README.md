@@ -24,7 +24,7 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * Flash messages käyttäjälle [x]
 * Käyttäjä voi lähettää viestejä [x]
 * Käyttäjä voi luoda postauksia. [x]
-* Moderaattorit voivat poistaa viestejä
+* Moderaattorit voivat poistaa viestejä [x]
 * Adminit voivat luoda uusia boardeja [x]
 * Sovelluksen rakenne uusiksi.
 * Korjaa kaikki tähtimerkki queryt.

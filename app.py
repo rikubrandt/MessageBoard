@@ -52,7 +52,7 @@ def logout():
     del session["user_id"]
     del session["username"]
     del session["role"]
-    
+    del session["csrf_token"]
     flash("You have been logged out.", "warning")
     return redirect("/")
 
@@ -93,7 +93,7 @@ def boards(name):
     posts = None
     if result:
         posts = result.fetchall()
-    result =db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
+    result = db.session.execute("SELECT id FROM boards WHERE name=:name", {"name": name})
     id = result.fetchone()[0]
     return render_template("/board.html", name=name, posts=posts, id=id)
 
@@ -103,16 +103,25 @@ def posts(id):
     FROM messages as m INNER JOIN users AS u ON m.user_id=u.id AND m.post_id=:id AND m.visible=true ORDER BY m.created_at;"""
     result = db.session.execute(sql, {"id": id})
     messages = result.fetchall()
+
     sql = "SELECT title FROM posts WHERE id=:id"
     result = db.session.execute(sql, {"id": id})
-    title = messages[0].post_id ##FIX THIS
+    title = result.fetchone().title
     return render_template("post.html", messages=messages, post_id=id, title=title)
 
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
     message = request.form["message"]
+    if not message:
+        flash("Please add your message.", "warning")
+        return redirect(request.referrer)
     id = request.form["id"]
     user_id = session["user_id"]
+
+    if not id or not user_id:
+        flash("Something wen't wrong.", "danger")
+        return redirect(request.referrer)
+
     sql = "INSERT INTO messages (post_id, user_id, content, created_at) VALUES(:id, :user, :message, NOW());"
     db.session.execute(sql, {"id": id, "user": user_id, "message": message})
     db.session.commit()
@@ -126,7 +135,15 @@ def add_post():
     title = request.form["title"]
     message = request.form["message"]
     board_id = request.form["id"]
-    print(board_id)
+    if not title:
+        flash("Title is needed.", "warning")
+        return redirect(request.referrer)
+    if not message:
+        flash("Add message to your post.", "warning")
+        return redirect(request.referrer)
+    if not board_id:
+        flash("Something wen't wrong.", "danger")
+        return redirect(request.referrer)
     user_id = session["user_id"]
     sql = "INSERT INTO posts (post_owner, title, created_at, board) VALUES (:user_id, :title, NOW(), :board) RETURNING id;"
     result = db.session.execute(sql, {"user_id": user_id, "title": title, "board": board_id})
@@ -144,13 +161,28 @@ def delete_message():
     if session["username"] != request.form["username"]:
         return "Forbidden - 403"
     else:
-        first_message = False
         id = request.form["id"]
 
-        sql = "UPDATE messages SET visible = FALSE WHERE id=:id;"
-        db.session.execute(sql, {"id": id})
-        db.session.commit()
-        return redirect(request.referrer)
+        # checks if the given message is the first of the post.
+        sql = """SELECT a.id FROM messages as a WHERE created_at =
+        (SELECT MIN(m.created_at) FROM messages as m INNER JOIN posts as p ON 
+        p.id=m.post_id AND m.visible = TRUE) AND id=:id"""
+        result = db.session.execute(sql, {"id": id})
+        first = result.fetchone()
+        if first:
+            sql = "UPDATE posts SET visible = FALSE WHERE id=:id"
+            db.session.execute(sql, {"id": id})
+            db.session.commit()
+
+            sql = "UPDATE messages SET visible = FALSE WHERE post_id=:id"
+            db.session.execute(sql, {"id": id})
+            db.session.commit()
+            return redirect("/")
+        else:
+            sql = "UPDATE messages SET visible = FALSE WHERE id=:id;"
+            db.session.execute(sql, {"id": id})
+            db.session.commit()
+            return redirect(request.referrer)
 
 @app.route("/result")
 def result():

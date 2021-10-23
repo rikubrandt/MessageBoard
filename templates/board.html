@@ -10,7 +10,7 @@
 <ul class="list-group">
 {% for post in posts%}
 <a class="btn btn-info" href="/post/{{post.id}}"><li class="list-group-item btn btn-info">
-    <h4>{{post.title}}</h4> Last message: TODO
+    <h4>{{post.title}}</h4>
     {%if session.user_id and session.role > 1%}
     <form action="/deletePost" method="POST">
         <button type="submit" class="btn btn-warning">Delete</button>

@@ -28,4 +28,4 @@ Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovellukse
 * [ ] Sovelluksen rakenne uusiksi.
 * [ ] Korjaa kaikki tähtimerkki queryt.
 * [x] Viestien muokkaus.
-* [ ] CSRF haavoittuvuudet.
+* [x] CSRF haavoittuvuudet.

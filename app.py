@@ -110,6 +110,8 @@ def posts(id):
 
 @app.route("/sendMessage", methods=["POST"])
 def send_message():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     message = request.form["message"].rstrip()
     if not message:
         flash("Please add your message.", "warning")
@@ -131,6 +133,8 @@ def send_message():
 
 @app.route("/addPost", methods=["POST"])
 def add_post():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     title = request.form["title"].rstrip()
     message = request.form["message"].rstrip()
     board_id = request.form["id"]
@@ -157,13 +161,16 @@ def add_post():
 
 @app.route("/deleteMessage", methods=["POST"])
 def delete_message():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     if session["username"] != request.form["username"]:
         return "Forbidden - 403"
     else:
         id = request.form["id"]
 
         # checks if the given message is the first of the post.
-        sql = "SELECT m.id FROM messages as m INNER JOIN posts as p ON p.created_at=m.created_at AND m.post_id=p.id AND m.id=:id"
+        sql = """SELECT m.id FROM messages as m INNER JOIN posts as p
+        ON p.created_at=m.created_at AND m.post_id=p.id AND m.id=:id"""
 
 
         result = db.session.execute(sql, {"id": id})
@@ -196,6 +203,8 @@ def result():
 
 @app.route("/createBoard", methods=["POST"])
 def create_board():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     name = request.form["name"].rstrip()
     if not name:
         flash("Board name can't be empty.", "warning")
@@ -209,7 +218,9 @@ def create_board():
 
 @app.route("/edit/<id>")
 def edit_post(id):
-    print("Edit message id: " + id)
+
+
+
     sql = "SELECT id, post_id, content FROM messages WHERE id=:id"
     result = db.session.execute(sql, {"id": id})
     message = result.fetchone()
@@ -217,6 +228,8 @@ def edit_post(id):
 
 @app.route("/updateMessage", methods=["POST"])
 def update_message():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     message = request.form["message"]
     id = request.form["id"]
     sql = "UPDATE messages SET content = :message WHERE id=:id"
@@ -230,6 +243,8 @@ def update_message():
 
 @app.route("/deletePost", methods=["POST"])
 def delete_post():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     id = request.form["id"]
     sql = "UPDATE posts SET visible = FALSE WHERE id=:id"
     db.session.execute(sql, {"id": id})
@@ -242,6 +257,8 @@ def delete_post():
 
 @app.route("/deleteBoard", methods=["POST"])
 def delete_board():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return render_template("error.html", error="User cannot be validated.")
     id = request.form["id"]
     if not id:
         flash("Something wen't wrong", "danger")

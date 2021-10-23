@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block header %}
+    {{super()}}
+{% endblock%}
+
+{% block content %}
+<h1 class="display-4">Something went wrong.</h1>
+<p>Error code: {{error}}</p>
+{% endblock %}
+
+{% block footer%}
+    {{super()}}
+{% endblock %}

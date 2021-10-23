@@ -16,6 +16,8 @@
         <button class="btn btn-primary">Edit message</button>
     </div>
     <input type="hidden" name="id" value="{{message.id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
 </form>
 {% endif %}
 {% endblock %}

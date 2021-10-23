@@ -10,13 +10,15 @@
 <ul class="list-group">
 {% for message in messages%}
 <li class="list-group-item">
-    <h4>{{message.username}}</h4>{{message.content}}, Time sent: {{message.created_at}} ID: {{message.id}}
+    <h4>{{message.username}}</h4>{{message.content}}, Time sent: {{message.created_at}}
     {% if session.user_id%}
     {%if session.user_id == message.user_id or session.role > 1 %}
     <form action="/deleteMessage" method="POST">
     <button class="btn btn-danger">Del</button>
     <input type="hidden" name="id" value="{{message.id}}">
     <input type="hidden" name="username" value="{{session.username}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
     </form>
     {% endif %}
     {% endif %}
@@ -33,6 +35,8 @@
         <button class="btn btn-primary">Send message</button>
     </div>
     <input type="hidden" name="id" value="{{post_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
 </form>
 {% endif %}
 {% endblock %}

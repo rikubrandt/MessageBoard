@@ -37,6 +37,8 @@
         <button type="submit" class="btn btn-primary">Add post</button>
     </div>
     <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
 </form>
 {% endif %}
 {% endblock %}

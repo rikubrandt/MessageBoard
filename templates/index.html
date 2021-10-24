@@ -16,6 +16,7 @@
             <form action="/deleteBoard" method="POST">
                 <button class="btn btn-danger">Delete</button>
                 <input type="hidden" name="id" value={{board.id}}>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             </form>
         {% endif %}
     </li></a>

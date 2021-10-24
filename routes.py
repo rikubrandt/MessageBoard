@@ -88,10 +88,10 @@ def register():
 @app.route("/boards/<name>")
 def boards(name):
     sql = "SELECT id from boards WHERE name=:name"
-    result = db.session.execute(sql), {"name":name}
-    get = result.fetchall()
+    result = db.session.execute(sql, {"name":name})
+    get = result.fetchone()
     if not get:
-        return render_template("error.html", error="Board name not found.")
+        return render_template("error.html", error="Board not found.")
 
     sql = "SELECT p.id, p.post_owner, p.title FROM posts AS p INNER JOIN boards as b ON p.board=b.id AND b.name=:name AND p.visible = TRUE"
     result = db.session.execute(sql, {"name": name})

@@ -89,7 +89,7 @@ def register():
 def boards(name):
     sql = "SELECT id from boards WHERE name=:name"
     result = db.session.execute(sql), {"name":name}
-    get = result.fetchone()
+    get = result.fetchall()
     if not get:
         return render_template("error.html", error="Board name not found.")
 

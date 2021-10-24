@@ -3,7 +3,7 @@
 URL
 > https://messageboard-tsoha.herokuapp.com/
 
-
+Käyttäjä, jolla admin oikeudet: username: admin pw: admin
 Rekisteröinti onnistuu tällä hetkellä sivulta /register
 
 Keskeiset toiminnot ovat samanlaiset kuin aihevalinta sivun keskustelusovelluksella.

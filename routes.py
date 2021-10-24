@@ -262,10 +262,6 @@ def delete_post():
     sql = "UPDATE posts SET visible = FALSE WHERE id=:id"
     db.session.execute(sql, {"id": id})
     db.session.commit()
-
-    sql = "UPDATE messages SET visible = FALSE WHERE post_id=:id"
-    db.session.execute(sql, {"id": id})
-    db.session.commit()
     return redirect(request.referrer)
 
 
